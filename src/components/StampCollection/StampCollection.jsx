@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import Stamp from '../Stamp/Stamp';
 
 export default function StampCollection({ stamps, selectedStampId, onSelect, onDelete }) {
@@ -36,7 +36,7 @@ export default function StampCollection({ stamps, selectedStampId, onSelect, onD
           <button className="collection-stamp-select" aria-label={`${index + 1}번 ${stamp.label} 우표 선택`} aria-pressed={selectedStampId === stamp.id} onClick={() => onSelect(stamp.id)}>
             <Stamp stamp={stamp} /><span>{stamp.label} · {String(index + 1).padStart(2, '0')}</span>
           </button>
-          <label className="collection-check">
+          <label className="collection-check" onClick={event => event.stopPropagation()}>
             <input type="checkbox" checked={checked} onChange={() => toggleChecked(stamp.id)} aria-label={`${index + 1}번 ${stamp.label} 우표 삭제 목록에 추가`} />
             <span aria-hidden="true">{checked ? '✓' : ''}</span>
           </label>
@@ -45,3 +45,4 @@ export default function StampCollection({ stamps, selectedStampId, onSelect, onD
     </div> : <div className="empty-collection"><span>아직 비어 있는 여행 기록</span><p>풍경을 클릭해 마음에 드는 장면을 모아보세요.</p></div>}
   </section>;
 }
+
