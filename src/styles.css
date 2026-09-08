@@ -1,4 +1,4 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+﻿* { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { width: 100%; min-height: 100%; }
 body { font-family: Arial, 'Malgun Gothic', sans-serif; background: #1f1c19; color: #3d3229; }
 button { font: inherit; cursor: pointer; }
@@ -151,12 +151,18 @@ button:disabled { cursor: default; opacity: .45; }
   .guide { left: 18px; bottom: 18px; font-size: 8px; letter-spacing: .13em; }
   .sweep-trigger { bottom: 108px; padding: 9px 11px; }
   .archive-invitation { right: 18px; bottom: 48px; padding: 11px 14px; }
-  .archive-desk { height: 94svh; padding: 20px 16px; overflow-y: auto; }
-  .archive-header { margin-bottom: 20px; padding-bottom: 16px; }
+  .archive-desk { width: 100vw; height: 100svh; max-height: none; border: 0; padding: 16px 12px 24px; overflow-y: auto; }
+  .archive-close { top: 12px; right: 12px; width: 34px; height: 34px; font-size: 21px; }
+  .archive-header { margin-bottom: 14px; padding: 0 48px 14px 4px; }
+  .archive-header h2 { font-size: 30px; }
   .archive-layout { display: flex; flex-direction: column; flex: none; }
-  .archive-library { border-right: 0; border-bottom: 1px solid #80624440; padding: 0 0 20px; }
-  .collection { grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: 230px; }
+  .archive-library { border-right: 0; border-bottom: 1px solid #80624440; padding: 0 0 16px; }
+  .collection { grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: 205px; gap: 14px 6px; padding: 4px 2px 10px; }
+  .collection-card { padding: 3px; }
+  .collection-stamp-select > span { margin-top: 6px; font-size: 8px; }
+  .collection-check { top: 5px; left: 5px; width: 20px; height: 20px; }
   .postcard-section { overflow: visible; padding: 0; }
+  .postcard-section > .section-head { position: relative; top: auto; padding: 8px 0 12px; background: transparent; }
   .postcard-customizer { grid-template-columns: 1fr 1fr; }
   .postcard-workspace { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 4px 0 24px; }
   .postcard-card { flex: none; width: min(100%, 360px); }
@@ -169,7 +175,15 @@ button:disabled { cursor: default; opacity: .45; }
   .postcard-meta, .postcard-message, .postcard-signature { width: calc(100% - 100px); }
   .section-head h3 { font-size: 22px; }
 }
+@media (max-width: 360px) {
+  .archive-desk { padding-left: 9px; padding-right: 9px; }
+  .collection-tools button { font-size: 8px; }
+  .customizer-btn { padding-left: 4px; padding-right: 4px; font-size: 8px; letter-spacing: .04em; }
+  .postcard-card { width: 100%; }
+}
 @media (pointer: coarse) { .travel-stage { cursor: crosshair; } .stamp-cursor { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
