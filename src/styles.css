@@ -159,6 +159,9 @@ button:disabled { cursor: default; opacity: .45; }
   .archive-library { flex: none; border-right: 0; border-bottom: 1px solid #80624440; padding: 0 0 16px; }
   .collection-section { flex: none; }
   .collection { grid-template-columns: repeat(3, minmax(0, 1fr)); height: 230px; max-height: 230px; gap: 14px 6px; padding: 4px 2px 10px; }
+  .collection { grid-auto-rows: 170px; }
+  .collection-card { height: 170px; }
+  .collection-card svg { width: auto; height: 145px; max-width: 100%; margin: 0 auto; }
   .collection-card { padding: 3px; }
   .collection-stamp-select > span { margin-top: 6px; font-size: 8px; }
   .collection-check { top: 5px; left: 5px; width: 20px; height: 20px; }
@@ -186,6 +189,7 @@ button:disabled { cursor: default; opacity: .45; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
 
 
 
