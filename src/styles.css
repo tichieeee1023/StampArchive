@@ -155,10 +155,10 @@ button:disabled { cursor: default; opacity: .45; }
   .archive-close { top: 12px; right: 12px; width: 34px; height: 34px; font-size: 21px; }
   .archive-header { margin-bottom: 14px; padding: 0 48px 14px 4px; }
   .archive-header h2 { font-size: 30px; }
-  .archive-layout { display: flex; flex-direction: column; flex: none; }
+  .archive-layout { display: flex; flex-direction: column; flex: none; height: auto; }
   .archive-library { flex: none; border-right: 0; border-bottom: 1px solid #80624440; padding: 0 0 16px; }
   .collection-section { flex: none; }
-  .collection { grid-template-columns: repeat(3, minmax(0, 1fr)); height: 230px; max-height: 230px; gap: 14px 6px; padding: 4px 2px 10px; }
+  .collection { flex: none; grid-template-columns: repeat(3, minmax(0, 1fr)); height: 230px; max-height: 230px; gap: 14px 6px; padding: 4px 2px 10px; }
   .collection { grid-auto-rows: 170px; }
   .collection-card { height: 170px; }
   .collection-card svg { width: auto; height: 145px; max-width: 100%; margin: 0 auto; }
@@ -189,6 +189,7 @@ button:disabled { cursor: default; opacity: .45; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
 
 
 
