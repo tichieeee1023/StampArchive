@@ -120,6 +120,7 @@ button:disabled { cursor: default; opacity: .45; }
 .postmark-date { position: absolute; z-index: 3; left: 50%; top: 78%; transform: translate(-50%, -50%) rotate(-2deg); min-width: max-content; border: 0; padding: 1px 2px; background: #faf3e4d9; color: var(--ink, #3f3329); font: 700 6px/1.15 Arial, sans-serif; letter-spacing: .04em; mix-blend-mode: multiply; }
 .postmark-ink--rectangle .postmark-date { top: 50%; }
 .postmark-ink--triangle .postmark-date { top: 86%; font-size: 5px; }
+.postmark-ink--cancelled .postmark-date { top: 54%; }
 .applied-postmark { position: absolute; top: 28.3%; left: calc(70% + var(--shift)); pointer-events: none; transform: translate(-50%, -50%) rotate(var(--turn)); mix-blend-mode: multiply; animation: ink-impact .52s cubic-bezier(.14,.73,.2,1) both; }
 .applied-postmark .postmark-ink { width: 122px; height: 122px; }
 .applied-postmark .postmark-art--sharp { opacity: .98; }
@@ -190,6 +191,7 @@ button:disabled { cursor: default; opacity: .45; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
 
 
 
