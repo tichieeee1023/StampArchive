@@ -29,7 +29,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Upload Pages artifact
+      - name: Configure Pages`r`n        uses: actions/configure-pages@v5`r`n      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -44,3 +44,4 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
