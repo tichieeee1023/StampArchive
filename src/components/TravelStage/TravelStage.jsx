@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+﻿import { useRef, useState } from 'react';
 
 export default function TravelStage({ preset, onCollect }) {
   const imageRef = useRef(null);
@@ -39,3 +39,4 @@ export default function TravelStage({ preset, onCollect }) {
     </div>}
   </>;
 }
+
