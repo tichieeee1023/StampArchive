@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoojin Stamp Archive</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #1f1c19;
+      color: #2f2923;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* =========================
+       BACKGROUND
+    ========================= */
+
+    .travel-stage {
+      position: absolute;
+      inset: 0;
+
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+
+      transition:
+        background-image 0.4s ease,
+        filter 0.4s ease;
+
+      cursor: crosshair;
+    }
+
+    .travel-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.05),
+          rgba(0, 0, 0, 0.22)
+        );
+
+      pointer-events: none;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      z-index: 20;
+
+      pointer-events: none;
+    }
+
+    .title-area {
+      color: white;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+
+      opacity: 0.78;
+    }
+
+    .title {
+      font-family: Georgia, serif;
+      font-size: clamp(2.8rem, 6vw, 6rem);
+      line-height: 0.85;
+      font-weight: 400;
+      letter-spacing: -0.05em;
+    }
+
+    /* =========================
+       PRESET NAV
+    ========================= */
+
+    .preset-nav {
+      pointer-events: auto;
+
+      display: flex;
+      gap: 8px;
+
+      padding: 8px;
+
+      background: rgba(248, 242, 230, 0.82);
+      backdrop-filter: blur(10px);
+
+      border-radius: 999px;
+    }
+
+    .preset-btn {
+      border: 0;
+      border-radius: 999px;
+
+      padding: 9px 14px;
+
+      background: transparent;
+
+      color: #4f463d;
+      font-size: 12px;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .preset-btn:hover,
+    .preset-btn.active {
+      background: #3a322b;
+      color: white;
+    }
+
+    /* =========================
+       GUIDE
+    ========================= */
+
+    .guide {
+      position: absolute;
+      left: 34px;
+      bottom: 32px;
+
+      z-index: 20;
+
+      color: white;
+
+      font-size: 11px;
+      letter-spacing: 0.2em;
+
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+
+      pointer-events: none;
+    }
+
+    /* =========================
+       DROPPED STAMP
+    ========================= */
+
+    .stamp {
+      position: absolute;
+
+      width: 120px;
+      height: 160px;
+
+      z-index: 10;
+
+      pointer-events: none;
+
+      transform-origin: center center;
+
+      animation:
+        stampDrop 0.72s cubic-bezier(0.22, 0.85, 0.3, 1)
+        forwards;
+
+      filter:
+        drop-shadow(0 8px 8px rgba(0, 0, 0, 0.2));
+    }
+
+    @keyframes stampDrop {
+      from {
+        transform:
+          translate(-50%, -50%)
+          translateY(-20px)
+          rotate(var(--start-rotate))
+          scale(1.12);
+
+        opacity: 0;
+      }
+
+      to {
+        transform:
+          translate(-50%, -50%)
+          translateY(var(--drop-y))
+          rotate(var(--rotate))
+          scale(1);
+
+        opacity: 1;
+      }
+    }
+
+    .stamp-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .stamp-image {
+      pointer-events: none;
+    }
+
+    /* =========================
+       DRAWER BUTTON
+    ========================= */
+
+    .drawer-trigger {
+      position: absolute;
+      right: 0;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      z-index: 35;
+
+      border: 0;
+
+      padding: 14px 10px;
+
+      background: #efe2c7;
+      color: #483d31;
+
+      writing-mode: vertical-rl;
+
+      letter-spacing: 0.16em;
+      font-size: 10px;
+
+      cursor: pointer;
+
+      border-radius: 10px 0 0 10px;
+
+      box-shadow:
+        -6px 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    /* =========================
+       DRAWER
+    ========================= */
+
+    .drawer-backdrop {
+      position: absolute;
+      inset: 0;
+
+      z-index: 40;
+
+      background: rgba(29, 25, 21, 0.18);
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity 0.35s ease;
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: min(420px, 90vw);
+      height: 100%;
+
+      z-index: 50;
+
+      padding: 28px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #e5d0a7,
+          #f0dfbd
+        );
+
+      box-shadow:
+        -20px 0 50px rgba(36, 26, 18, 0.22);
+
+      transform: translateX(100%);
+
+      transition:
+        transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 24px;
+    }
+
+    .drawer-title {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 400;
+    }
+
+    .drawer-count {
+      margin-top: 6px;
+
+      font-size: 11px;
+      letter-spacing: 0.18em;
+
+      opacity: 0.65;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+
+      border: 1px solid rgba(54, 46, 38, 0.28);
+      border-radius: 50%;
+
+      background: transparent;
+
+      cursor: pointer;
+    }
+
+    /* =========================
+       COLLECTION GRID
+    ========================= */
+
+    .collection {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+
+      padding-right: 4px;
+    }
+
+    .collection-card {
+      position: relative;
+
+      aspect-ratio: 3 / 4;
+
+      border: 0;
+
+      background: transparent;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.22s ease;
+    }
+
+    .collection-card:hover {
+      transform:
+        translateY(-6px)
+        rotate(-1deg);
+    }
+
+    .collection-card svg {
+      width: 100%;
+      height: 100%;
+
+      filter:
+        drop-shadow(0 7px 6px rgba(60, 43, 28, 0.16));
+    }
+
+    /* =========================
+       STAMP DETAIL MODAL
+    ========================= */
+
+    .detail-modal {
+      position: absolute;
+      inset: 0;
+
+      z-index: 70;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(24, 21, 18, 0.72);
+      backdrop-filter: blur(8px);
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity 0.3s ease;
+    }
+
+    .detail-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-inner {
+      position: relative;
+
+      width: min(390px, 82vw);
+
+      animation: detailIn 0.4s ease;
+    }
+
+    @keyframes detailIn {
+      from {
+        opacity: 0;
+        transform:
+          translateY(20px)
+          scale(0.94)
+          rotate(-3deg);
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translateY(0)
+          scale(1)
+          rotate(0);
+      }
+    }
+
+    .detail-inner svg {
+      width: 100%;
+      height: auto;
+
+      filter:
+        drop-shadow(0 18px 25px rgba(0, 0, 0, 0.28));
+    }
+
+    .seal {
+      position: absolute;
+
+      width: 120px;
+      height: 120px;
+
+      border: 7px double rgba(117, 35, 26, 0.78);
+      border-radius: 50%;
+
+      display: grid;
+      place-items: center;
+
+      color: rgba(117, 35, 26, 0.78);
+
+      font-family: Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+
+      transform: rotate(-17deg);
+
+      pointer-events: none;
+
+      opacity: 0;
+    }
+
+    .seal.show {
+      opacity: 1;
+    }
+
+    .seal-btn {
+      position: absolute;
+      left: 50%;
+      bottom: -60px;
+
+      transform: translateX(-50%);
+
+      border: 0;
+      border-radius: 999px;
+
+      padding: 12px 18px;
+
+      background: #f2e5cc;
+      color: #45392f;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 760px) {
+      .header {
+        top: 18px;
+        left: 18px;
+        right: 18px;
+
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .preset-nav {
+        flex-wrap: wrap;
+        border-radius: 16px;
+      }
+
+      .stamp {
+        width: 90px;
+        height: 120px;
+      }
+
+      .guide {
+        left: 18px;
+        bottom: 18px;
+      }
+    }
+
+    /* =========================
+   DRAWER LAYOUT
+========================= */
+
+.drawer-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  height: calc(100vh - 110px);
+  overflow: hidden;
+}
+
+.drawer-section {
+  min-height: 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.section-head h3 {
+  margin-bottom: 4px;
+
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.section-head p {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(62, 49, 38, 0.72);
+}
+
+.collection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+
+  max-height: 280px;
+  overflow-y: auto;
+
+  padding-right: 4px;
+}
+
+.collection-card {
+  position: relative;
+
+  aspect-ratio: 3 / 4;
+
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  transition: transform 0.22s ease;
+}
+
+.collection-card:hover {
+  transform: translateY(-5px) rotate(-1deg);
+}
+
+.collection-card.active::after {
+  content: "SELECTED";
+  position: absolute;
+  right: 8px;
+  top: 8px;
+
+  padding: 4px 6px;
+  border-radius: 999px;
+
+  background: rgba(128, 32, 28, 0.88);
+  color: white;
+
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.collection-card svg {
+  width: 100%;
+  height: 100%;
+
+  filter: drop-shadow(0 7px 6px rgba(60, 43, 28, 0.16));
+}
+
+/* =========================
+   MINI BUTTON
+========================= */
+
+.mini-btn,
+.action-btn {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.mini-btn {
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  background: #f4ead2;
+  color: #4a3b2f;
+
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.action-btn {
+  width: 100%;
+
+  padding: 14px 16px;
+  border-radius: 14px;
+
+  background: #4b3a2f;
+  color: #fff7ea;
+
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+/* =========================
+   POSTCARD
+========================= */
+
+.postcard-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.postcard-stage {
+  position: relative;
+  flex: 1;
+  min-height: 360px;
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  background: #f8efd9;
+  box-shadow: inset 0 0 0 1px rgba(79, 60, 41, 0.12);
+}
+
+.postcard-card {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.16),
+      rgba(255,255,255,0)
+    ),
+    #f8efd9;
+}
+
+.postcard-cover {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 18px;
+  height: 150px;
+
+  border-radius: 12px;
+
+  background-size: cover;
+  background-position: center;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.postcard-paper {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  top: 186px;
+
+  padding: 18px 18px 20px;
+
+  border-radius: 12px;
+  background: rgba(255, 251, 242, 0.88);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.postcard-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 12px;
+
+  color: rgba(70, 53, 38, 0.8);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.postcard-message {
+  color: #4b3d31;
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.postcard-signature {
+  margin-top: 18px;
+
+  color: rgba(75, 61, 49, 0.68);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.pasted-stamp {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+
+  width: 92px;
+  height: 124px;
+
+  transform: rotate(7deg);
+
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,0.18));
+}
+
+.pasted-stamp svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.postmark {
+  position: absolute;
+
+  width: 128px;
+  height: 128px;
+
+  border: 5px double rgba(135, 42, 31, 0.72);
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  color: rgba(135, 42, 31, 0.72);
+  text-align: center;
+
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.postmark::before,
+.postmark::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.postmark::before {
+  top: 38px;
+}
+
+.postmark::after {
+  bottom: 38px;
+}
+
+.postmark-main {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.postmark-sub {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.postcard-actions {
+  margin-top: 12px;
+}
+
+.empty-stamp-note {
+  position: absolute;
+  right: 24px;
+  top: 36px;
+
+  width: 92px;
+  height: 124px;
+
+  border: 2px dashed rgba(85, 66, 47, 0.28);
+  border-radius: 10px;
+
+  display: grid;
+  place-items: center;
+
+  color: rgba(85, 66, 47, 0.48);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 8px;
+}
+
+@media (max-width: 760px) {
+  .drawer-layout {
+    height: calc(100vh - 100px);
+  }
+
+  .collection {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 220px;
+  }
+
+  .postcard-stage {
+    min-height: 320px;
+  }
+
+  .postcard-cover {
+    height: 120px;
+  }
+
+  .postcard-paper {
+    top: 154px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <main
+    class="travel-stage"
+    id="travelStage"
+  ></main>
+
+
+  <header class="header">
+
+    <div class="title-area">
+      <div class="eyebrow">
+        Interactive Stamp Collection
+      </div>
+
+      <h1 class="title">
+        Yoojin<br />
+        Postcards
+      </h1>
+    </div>
+
+
+    <nav
+      class="preset-nav"
+      id="presetNav"
+    ></nav>
+
+  </header>
+
+
+  <div class="guide">
+    CLICK ANYWHERE TO COLLECT A STAMP
+  </div>
+
+
+  <button
+    class="drawer-trigger"
+    id="drawerTrigger"
+  >
+    COLLECTION
+  </button>
+
+
+  <div
+    class="drawer-backdrop"
+    id="drawerBackdrop"
+  ></div>
+
+
+  <aside
+    class="drawer"
+    id="drawer"
+  >
+
+   <div class="drawer-header">
+  <div>
+    <h2 class="drawer-title">Stamp Drawer</h2>
+    <div class="drawer-count" id="drawerCount">0 COLLECTED</div>
+  </div>
+
+  <button class="close-btn" id="closeDrawer">✕</button>
+</div>
+
+<div class="drawer-layout">
+  <section class="drawer-section">
+    <div class="section-head">
+      <div>
+        <h3>Collected Stamps</h3>
+        <p>Select one and paste it onto the postcard.</p>
+      </div>
+    </div>
+
+    <div class="collection" id="collection"></div>
+  </section>
+
+  <section class="drawer-section postcard-section">
+    <div class="section-head">
+      <div>
+        <h3>Postcard Desk</h3>
+        <p>A random postcard preset with a small note for you.</p>
+      </div>
+
+      <button class="mini-btn" id="newPostcardBtn">
+        NEW CARD
+      </button>
+    </div>
+
+    <div class="postcard-stage" id="postcardStage"></div>
+
+    <div class="postcard-actions">
+      <button class="action-btn" id="postmarkBtn">
+        POSTMARK IT
+      </button>
+    </div>
+  </section>
+</div>
+
+  </aside>
+
+
+  <div
+    class="detail-modal"
+    id="detailModal"
+  >
+
+    <div
+      class="detail-inner"
+      id="detailInner"
+    >
+
+      <div
+        id="detailStamp"
+      ></div>
+
+      <div
+        class="seal"
+        id="seal"
+      >
+        YOOJIN
+      </div>
+
+      <button
+        class="seal-btn"
+        id="sealButton"
+      >
+        STAMP IT
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+  /* ======================================================
+     PRESETS
+  ====================================================== */
+
+  const presets = [
+    {
+      id: "paris",
+      label: "Paris",
+      variant: "classic",
+      image:
+        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1800&q=85",
+    },
+    {
+      id: "newyork",
+      label: "New York",
+      variant: "bold",
+      image:
+        "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=1800&q=85",
+    },
+    {
+      id: "tokyo",
+      label: "Tokyo",
+      variant: "slim",
+      image:
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1800&q=85",
+    },
+    {
+      id: "italy",
+      label: "Italy",
+      variant: "double",
+      image:
+        "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=1800&q=85",
+    },
+    {
+      id: "forest",
+      label: "Forest",
+      variant: "soft",
+      image:
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1800&q=85",
+    },
+  ];
+
+  const postcardPresets = [
+    {
+      id: "sunset",
+      title: "Sunset Letter",
+      location: "A Quiet Evening",
+      image:
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+      id: "city",
+      title: "City Memory",
+      location: "Wandering Downtown",
+      image:
+        "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+      id: "rail",
+      title: "Small Departure",
+      location: "Platform Notes",
+      image:
+        "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1200&q=85",
+    },
+    {
+      id: "sea",
+      title: "Blue Escape",
+      location: "Postcard from the Coast",
+      image:
+        "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=85",
+    },
+  ];
+
+  const postcardMessages = [
+    "오늘의 작은 기쁨이 오래도록 마음에 남기를 바랍니다.",
+    "당신의 하루에 다정한 바람과 좋은 소식이 함께하길 바라요.",
+    "멀리 떠나지 않아도, 오늘이 작은 여행처럼 느껴지기를.",
+    "당신이 걷는 길마다 예쁜 장면이 하나씩 발견되기를 바랍니다.",
+    "조급하지 않아도 괜찮아요. 당신의 속도로 반짝이면 됩니다.",
+    "평범한 하루 속에서도 마음이 쉬어갈 한 장면을 만나길 바라요.",
+    "언제나 당신의 계절에 따뜻한 빛이 머물기를 바랍니다.",
+  ];
+
+  const postmarkPresets = [
+    {
+      main: "AIR MAIL",
+      sub: "BON VOYAGE",
+    },
+    {
+      main: "POSTMARK",
+      sub: "TRAVEL ARCHIVE",
+    },
+    {
+      main: "APPROVED",
+      sub: "VIA AEROGRAMME",
+    },
+    {
+      main: "SPECIAL",
+      sub: "DELIVERY",
+    },
+    {
+      main: "HAPPY TRIP",
+      sub: "PAR AVION",
+    },
+  ];
+
+
+  let currentPreset = presets[0];
+  let stamps = [];
+  let selectedStamp = null;
+
+  let postcardState = {
+    preset: null,
+    message: "",
+    selectedStampId: null,
+    postmark: null,
+  };
+
+
+  const stage = document.querySelector("#travelStage");
+  const presetNav = document.querySelector("#presetNav");
+  const drawer = document.querySelector("#drawer");
+  const drawerBackdrop = document.querySelector("#drawerBackdrop");
+  const collection = document.querySelector("#collection");
+  const drawerCount = document.querySelector("#drawerCount");
+  const drawerTrigger = document.querySelector("#drawerTrigger");
+  const closeDrawer = document.querySelector("#closeDrawer");
+  const postcardStage = document.querySelector("#postcardStage");
+  const newPostcardBtn = document.querySelector("#newPostcardBtn");
+  const postmarkBtn = document.querySelector("#postmarkBtn");
+
+
+  /* ======================================================
+     INIT
+  ====================================================== */
+
+  init();
+
+  async function init() {
+    await changePreset(currentPreset);
+    createRandomPostcard();
+  }
+
+
+  /* ======================================================
+     PRESET NAV
+  ====================================================== */
+
+  function renderPresetNav() {
+    presetNav.innerHTML = "";
+
+    presets.forEach((preset) => {
+      const button = document.createElement("button");
+
+      button.className = "preset-btn";
+      button.textContent = preset.label;
+
+      if (preset.id === currentPreset.id) {
+        button.classList.add("active");
+      }
+
+      button.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        await changePreset(preset);
+      });
+
+      presetNav.appendChild(button);
+    });
+  }
+
+  async function changePreset(preset) {
+    await loadImageInfo(preset);
+
+    currentPreset = preset;
+
+    stage.style.setProperty(
+      "--bg-image",
+      `url("${preset.image}")`
+    );
+
+    renderPresetNav();
+  }
+
+  function loadImageInfo(preset) {
+    return new Promise((resolve, reject) => {
+      if (preset.naturalWidth && preset.naturalHeight) {
+        resolve();
+        return;
+      }
+
+      const img = new Image();
+
+      img.onload = () => {
+        preset.naturalWidth = img.naturalWidth;
+        preset.naturalHeight = img.naturalHeight;
+        resolve();
+      };
+
+      img.onerror = () => {
+        console.error("이미지를 불러오지 못했습니다:", preset.image);
+        reject();
+      };
+
+      img.src = preset.image;
+    });
+  }
+
+
+  /* ======================================================
+     STAMP CREATION
+  ====================================================== */
+
+  stage.addEventListener("pointerdown", (event) => {
+    if (!currentPreset.naturalWidth || !currentPreset.naturalHeight) {
+      return;
+    }
+
+    const rect = stage.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const stamp = {
+      id: crypto.randomUUID(),
+      x,
+      y,
+      stageWidth: rect.width,
+      stageHeight: rect.height,
+      presetId: currentPreset.id,
+      variant: currentPreset.variant,
+      image: currentPreset.image,
+      imageWidth: currentPreset.naturalWidth,
+      imageHeight: currentPreset.naturalHeight,
+      rotation: random(-8, 8),
+      stamped: false,
+    };
+
+    stamps.push(stamp);
+
+    createDroppedStamp(stamp);
+    updateCollection();
+
+    if (stamps.length === 5) {
+      setTimeout(openDrawer, 700);
+    }
+  });
+
+
+  /* ======================================================
+     DROPPED STAMP
+  ====================================================== */
+
+  function createDroppedStamp(stamp) {
+    const element = document.createElement("div");
+
+    element.className = "stamp";
+    element.style.left = `${stamp.x}px`;
+    element.style.top = `${Math.min(stamp.y, window.innerHeight - 220)}px`;
+
+    element.style.setProperty("--rotate", `${stamp.rotation}deg`);
+    element.style.setProperty("--start-rotate", `${random(-20, 20)}deg`);
+    element.style.setProperty("--drop-y", `${random(130, 220)}px`);
+
+    element.innerHTML = createStampSVG(stamp);
+
+    document.querySelector(".app").appendChild(element);
+
+    if (stamps.length >= 5) {
+      setTimeout(() => {
+        const dropped = document.querySelectorAll(".stamp");
+
+        dropped.forEach((item, index) => {
+          item.style.transition = "transform .55s ease, opacity .5s ease";
+          item.style.transform = `
+            translate(${window.innerWidth}px, ${random(-80, 80)}px)
+            rotate(${random(30, 180)}deg)
+          `;
+          item.style.opacity = "0";
+
+          setTimeout(() => {
+            item.remove();
+          }, 600 + index * 20);
+        });
+      }, 850);
+    }
+  }
+
+
+  /* ======================================================
+     CROP
+  ====================================================== */
+
+  function getCropData(stamp, config) {
+    const {
+      stageWidth,
+      stageHeight,
+      imageWidth,
+      imageHeight,
+      x,
+      y,
+    } = stamp;
+
+    const coverScale = Math.max(
+      stageWidth / imageWidth,
+      stageHeight / imageHeight
+    );
+
+    const renderedWidth = imageWidth * coverScale;
+    const renderedHeight = imageHeight * coverScale;
+
+    const backgroundOffsetX = (stageWidth - renderedWidth) / 2;
+    const backgroundOffsetY = (stageHeight - renderedHeight) / 2;
+
+    const innerWidth = 120 - config.inner * 2;
+    const innerHeight = 160 - config.inner * 2;
+
+    const captureWidth = 190;
+    const captureHeight = captureWidth * (innerHeight / innerWidth);
+
+    const stampScaleX = innerWidth / captureWidth;
+    const stampScaleY = innerHeight / captureHeight;
+
+    const svgImageWidth = renderedWidth * stampScaleX;
+    const svgImageHeight = renderedHeight * stampScaleY;
+
+    const imageX =
+      config.inner +
+      innerWidth / 2 -
+      (x - backgroundOffsetX) * stampScaleX;
+
+    const imageY =
+      config.inner +
+      innerHeight / 2 -
+      (y - backgroundOffsetY) * stampScaleY;
+
+    return {
+      imageX,
+      imageY,
+      svgImageWidth,
+      svgImageHeight,
+    };
+  }
+
+
+  /* ======================================================
+     SVG STAMP
+  ====================================================== */
+
+  function createStampSVG(stamp) {
+    const id = `mask-${Math.random().toString(36).slice(2)}`;
+    const config = getStampConfig(stamp.variant);
+    const crop = getCropData(stamp, config);
+
+    return `
+      <svg
+        class="stamp-svg"
+        viewBox="0 0 120 160"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <mask id="${id}">
+            <rect x="0" y="0" width="120" height="160" fill="white" />
+            ${createPerforations(config)}
+          </mask>
+
+          <clipPath id="inner-${id}">
+            <rect
+              x="${config.inner}"
+              y="${config.inner}"
+              width="${120 - config.inner * 2}"
+              height="${160 - config.inner * 2}"
+              rx="${config.rounded}"
+            />
+          </clipPath>
+        </defs>
+
+        <rect
+          width="120"
+          height="160"
+          fill="#f4ead2"
+          mask="url(#${id})"
+        />
+
+        <image
+          href="${stamp.image}"
+          x="${crop.imageX}"
+          y="${crop.imageY}"
+          width="${crop.svgImageWidth}"
+          height="${crop.svgImageHeight}"
+          preserveAspectRatio="none"
+          clip-path="url(#inner-${id})"
+        />
+
+        ${
+          config.doubleFrame
+            ? `
+              <rect
+                x="14"
+                y="14"
+                width="92"
+                height="132"
+                fill="none"
+                stroke="rgba(78, 61, 46, .6)"
+                stroke-width="1"
+              />
+            `
+            : ""
+        }
+      </svg>
+    `;
+  }
+
+  function getStampConfig(variant) {
+    const configs = {
+      classic: {
+        radius: 4,
+        spacing: 12,
+        inner: 11,
+        rounded: 0,
+        doubleFrame: false,
+      },
+      bold: {
+        radius: 5.5,
+        spacing: 15,
+        inner: 10,
+        rounded: 0,
+        doubleFrame: false,
+      },
+      slim: {
+        radius: 3,
+        spacing: 10,
+        inner: 9,
+        rounded: 1,
+        doubleFrame: false,
+      },
+      double: {
+        radius: 4,
+        spacing: 12,
+        inner: 16,
+        rounded: 0,
+        doubleFrame: true,
+      },
+      soft: {
+        radius: 5,
+        spacing: 13,
+        inner: 12,
+        rounded: 8,
+        doubleFrame: false,
+      },
+    };
+
+    return configs[variant] || configs.classic;
+  }
+
+  function createPerforations(config) {
+    const circles = [];
+    const { radius, spacing } = config;
+
+    for (let x = spacing / 2; x < 120; x += spacing) {
+      circles.push(`
+        <circle cx="${x}" cy="0" r="${radius}" fill="black" />
+      `);
+
+      circles.push(`
+        <circle cx="${x}" cy="160" r="${radius}" fill="black" />
+      `);
+    }
+
+    for (let y = spacing / 2; y < 160; y += spacing) {
+      circles.push(`
+        <circle cx="0" cy="${y}" r="${radius}" fill="black" />
+      `);
+
+      circles.push(`
+        <circle cx="120" cy="${y}" r="${radius}" fill="black" />
+      `);
+    }
+
+    return circles.join("");
+  }
+
+
+  /* ======================================================
+     DRAWER
+  ====================================================== */
+
+  function openDrawer() {
+    drawer.classList.add("open");
+    drawerBackdrop.classList.add("open");
+    renderPostcard();
+  }
+
+  function closeDrawerPanel() {
+    drawer.classList.remove("open");
+    drawerBackdrop.classList.remove("open");
+  }
+
+  drawerTrigger.addEventListener("click", openDrawer);
+  closeDrawer.addEventListener("click", closeDrawerPanel);
+  drawerBackdrop.addEventListener("click", closeDrawerPanel);
+
+
+  /* ======================================================
+     COLLECTION
+  ====================================================== */
+
+  function updateCollection() {
+    drawerCount.textContent = `${stamps.length} COLLECTED`;
+    collection.innerHTML = "";
+
+    stamps.forEach((stamp) => {
+      const button = document.createElement("button");
+
+      button.className = "collection-card";
+
+      if (postcardState.selectedStampId === stamp.id) {
+        button.classList.add("active");
+      }
+
+      button.innerHTML = createStampSVG(stamp);
+
+      button.addEventListener("click", () => {
+        postcardState.selectedStampId = stamp.id;
+        postcardState.postmark = null;
+        selectedStamp = stamp;
+
+        updateCollection();
+        renderPostcard();
+      });
+
+      collection.appendChild(button);
+    });
+  }
+
+
+  /* ======================================================
+     POSTCARD
+  ====================================================== */
+
+  function createRandomPostcard() {
+    postcardState.preset = pickRandom(postcardPresets);
+    postcardState.message = pickRandom(postcardMessages);
+    postcardState.postmark = null;
+    renderPostcard();
+  }
+
+  function renderPostcard() {
+    if (!postcardStage) return;
+
+    const preset = postcardState.preset;
+    const selected = stamps.find(
+      (stamp) => stamp.id === postcardState.selectedStampId
+    );
+
+    if (!preset) {
+      postcardStage.innerHTML = "";
+      return;
+    }
+
+    postcardStage.innerHTML = `
+      <div class="postcard-card">
+        <div
+          class="postcard-cover"
+          style="background-image: url('${preset.image}')"
+        ></div>
+
+        <div class="postcard-paper">
+          <div>
+            <div class="postcard-meta">
+              <span>${preset.title}</span>
+              <span>${preset.location}</span>
+            </div>
+
+            <p class="postcard-message">
+              ${postcardState.message}
+            </p>
+          </div>
+
+          <div class="postcard-signature">
+            From a little archive of travels
+          </div>
+        </div>
+
+        ${
+          selected
+            ? `
+              <div class="pasted-stamp">
+                ${createStampSVG(selected)}
+              </div>
+            `
+            : `
+              <div class="empty-stamp-note">
+                CHOOSE<br />A STAMP
+              </div>
+            `
+        }
+
+        ${
+          postcardState.postmark
+            ? `
+              <div
+                class="postmark"
+                style="
+                  left: ${postcardState.postmark.x}%;
+                  top: ${postcardState.postmark.y}%;
+                  transform:
+                    translate(-50%, -50%)
+                    rotate(${postcardState.postmark.rotate}deg);
+                "
+              >
+                <div class="postmark-main">
+                  ${postcardState.postmark.main}
+                </div>
+                <div class="postmark-sub">
+                  ${postcardState.postmark.sub}
+                </div>
+              </div>
+            `
+            : ""
+        }
+      </div>
+    `;
+  }
+
+  newPostcardBtn.addEventListener("click", () => {
+    createRandomPostcard();
+  });
+
+
+  /* ======================================================
+     POSTMARK
+  ====================================================== */
+
+  postmarkBtn.addEventListener("click", () => {
+    if (!postcardState.selectedStampId) {
+      alert("먼저 우표를 하나 선택해주세요.");
+      return;
+    }
+
+    const mark = pickRandom(postmarkPresets);
+
+    postcardState.postmark = {
+      ...mark,
+      rotate: random(-18, 12),
+      x: random(67, 79),
+      y: random(21, 31),
+    };
+
+    renderPostcard();
+  });
+
+
+  /* ======================================================
+     UTIL
+  ====================================================== */
+
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+</script>
+
+</body>
+</html>
