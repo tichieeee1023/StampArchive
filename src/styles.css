@@ -1,4 +1,4 @@
-﻿* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { width: 100%; min-height: 100%; }
 body { font-family: Arial, 'Malgun Gothic', sans-serif; background: #1f1c19; color: #3d3229; }
 button { font: inherit; cursor: pointer; }
@@ -211,3 +211,126 @@ button:disabled { cursor: default; opacity: .45; }
 
 
 
+
+
+/* Mobile archive: keep every archive action inside one viewport. */
+@media (max-width: 760px) {
+  .archive-desk { width: 100vw; height: 100svh; padding: 8px 10px 10px; overflow: hidden; }
+  .archive-close { top: 7px; right: 8px; width: 30px; height: 30px; font-size: 19px; }
+  .archive-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(150px, 29svh) minmax(0, 1fr);
+    gap: 7px; width: 100%; height: 100%; min-height: 0; overflow: hidden;
+  }
+  .archive-library {
+    min-height: 0; padding: 0 0 6px; border-right: 0;
+    border-bottom: 1px solid #80624440; overflow: hidden;
+  }
+  .archive-header {
+    display: flex; align-items: baseline; gap: 8px; min-height: 29px;
+    margin: 0 0 3px; padding: 0 38px 4px 2px;
+  }
+  .archive-header .small-label { display: none; }
+  .archive-header h2 { margin: 0; font-size: 21px; line-height: 1.1; }
+  .archive-count { font-size: 7px; white-space: nowrap; }
+  .collection-section { flex: 1; min-height: 0; overflow: hidden; }
+  .collection-section .section-head { min-height: 22px; margin: 0 0 3px; }
+  .collection-section .section-head h3 { margin: 0; font-size: 16px; line-height: 1.2; }
+  .collection-section .section-head p { display: none; }
+  .collection-section .section-head .small-label { font-size: 7px; }
+  .collection-tools { flex: none; gap: 3px; margin-bottom: 3px; }
+  .collection-tools button { min-height: 22px; padding: 3px 5px; font-size: 7px; }
+  .collection {
+    flex: 1; min-height: 0; height: auto; max-height: none;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr); align-content: stretch;
+    gap: 3px 4px; padding: 1px 2px 2px; overflow: hidden;
+  }
+  .collection-card { height: auto; min-height: 0; padding: 1px; overflow: hidden; }
+  .collection-card:hover { transform: none; }
+  .collection-stamp-select {
+    display: flex; height: 100%; min-height: 0;
+    flex-direction: column; align-items: center;
+  }
+  .collection-card svg {
+    flex: 1; width: auto; height: 0; min-height: 0;
+    max-width: 100%; margin: 0 auto;
+  }
+  .collection-stamp-select > span {
+    flex: none; margin-top: 1px; font-size: 6px;
+    line-height: 1; white-space: nowrap;
+  }
+  .collection-card.active::after { top: 2px; right: 1px; padding: 2px; font-size: 5px; }
+  .collection-check { top: 2px; left: 2px; width: 16px; height: 16px; }
+  .postcard-section { min-height: 0; padding: 0; overflow: hidden; }
+  .postcard-section > .section-head {
+    position: static; flex: none; min-height: 24px;
+    margin: 0; padding: 0 0 3px; background: transparent;
+  }
+  .postcard-section > .section-head h3 { margin: 0; font-size: 17px; line-height: 1.1; }
+  .postcard-section > .section-head p { display: none; }
+  .postcard-customizer {
+    flex: none; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px; margin-bottom: 5px;
+  }
+  .customizer-btn {
+    min-height: 29px; padding: 4px 2px; font-size: 6px;
+    line-height: 1.15; letter-spacing: .03em;
+  }
+  .postcard-workspace {
+    display: grid; flex: 1;
+    grid-template-columns: minmax(0, 1fr) 92px;
+    align-items: stretch; justify-content: stretch;
+    gap: 7px; min-height: 0; height: auto; padding: 0; overflow: hidden;
+  }
+  .postcard-card {
+    align-self: center; justify-self: center;
+    width: auto; height: min(100%, calc((100vw - 119px) * 1.5)); max-width: 100%; max-height: 100%;
+    aspect-ratio: 2 / 3;
+  }
+  .postcard-paper { padding: 10px 11px; background-size: auto 22px; }
+  .postcard-meta, .postcard-message, .postcard-signature { width: calc(100% - 62px); }
+  .postcard-meta { gap: 2px; }
+  .postcard-meta span:first-child { font-size: 14px; line-height: 1.05; }
+  .postcard-meta span:last-child { font-size: 6px; }
+  .postcard-message { margin: 8px 0 10px; font-size: 9px; line-height: 1.75; }
+  .postcard-signature { font-size: 7px; line-height: 1.35; }
+  .pasted-stamp { right: 5%; top: 6%; width: 24%; }
+  .postmark-rail {
+    align-self: stretch; width: 92px; min-height: 0; overflow: hidden;
+  }
+  .postmark-picker {
+    display: flex; flex: 1; min-height: 0; flex-direction: column;
+  }
+  .postmark-picker legend {
+    flex: none; margin-bottom: 3px; font-size: 5px; letter-spacing: .1em;
+  }
+  .postmark-options {
+    flex: 1; min-height: 0; grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 3px;
+  }
+  .postmark-option { min-height: 0; padding: 1px; }
+  .postmark-ink { width: 53px; height: 42px; }
+  .stamp-floating-btn {
+    position: static; flex: none; margin: 4px auto 0;
+    padding: 7px 8px; font-size: 7px;
+  }
+  .desk-status { display: none; }
+  .applied-postmark .postmark-ink { width: 72px; height: 72px; }
+  .applied-postmark .postmark-date { font-size: 5px; }
+  .applied-postmark::before {
+    top: -52px; width: 29px; height: 57px; border-width: 2px;
+  }
+  .applied-postmark::after { width: 82px; height: 82px; }
+}
+@media (max-width: 360px), (max-height: 700px) and (max-width: 760px) {
+  .archive-layout { grid-template-rows: minmax(142px, 28svh) minmax(0, 1fr); }
+  .postcard-workspace { grid-template-columns: minmax(0, 1fr) 82px; gap: 5px; }
+  .postmark-rail { width: 82px; }
+  .postcard-card { height: min(100%, calc((100vw - 107px) * 1.5)); }
+  .postmark-ink { width: 46px; height: 36px; }
+  .postcard-paper { padding: 8px 9px; }
+  .postcard-meta, .postcard-message, .postcard-signature { width: calc(100% - 55px); }
+  .postcard-meta span:first-child { font-size: 12px; }
+  .postcard-message { margin-top: 6px; font-size: 8px; }
+}
